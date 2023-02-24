@@ -3,21 +3,25 @@ import 'factory/task_factory.dart';
 import 'models/task.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(TodoList());
 }
 
 class MyApp extends StatelessWidget {
   List<Task> tasks = TaskFactory().generateListTask();
+  //MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        home: Scaffold(
+    return Scaffold(
             appBar: AppBar(
                 leading:
-                    const IconButton(icon: Icon(Icons.check), onPressed: null),
+                  IconButton(icon: Icon(Icons.check), onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SecondRoute()),
+                    );
+                  }),
                 title: const Text("Text")),
             body: Container(
               padding: const EdgeInsets.all(10),
@@ -38,6 +42,35 @@ class MyApp extends StatelessWidget {
                             ]),
                           ))
                       .toList()),
-            )));
+            ));
+  }
+}
+
+class TodoList extends StatelessWidget{
+  @override
+   Widget build(BuildContext context) {
+    return MaterialApp(home: MyApp());
+   }
+}
+
+
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Second Route'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Go back!'),
+        ),
+      ),
+    );
   }
 }
