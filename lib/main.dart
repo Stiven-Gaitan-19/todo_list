@@ -7,23 +7,35 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  List<Task> tasks = TaskFactory().generateListTask();
+  
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Flutter Demo',
-        home: Scaffold(
+        home: ListView()
+    );
+  }
+}
+
+class ListView extends StatelessWidget{
+    List<Task> tasks = TaskFactory().generateListTask();
+
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
             appBar: AppBar(
-                leading:
-                    const IconButton(icon: Icon(Icons.check), onPressed: null),
-                title: const Text("Text")),
+                title: const Text("Todos")),
             body: Container(
               padding: const EdgeInsets.all(10),
               child: Column(
                   children: tasks
-                      .map((task) => Container(
+                      .map((task) => GestureDetector(
+                          onTap: () => {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DetailView(task: task)))
+                          },
+                          child: Container(
                             height: 70,
                             margin: const EdgeInsets.only(bottom: 10),
                             padding: const EdgeInsets.only(left: 15, right: 15),
@@ -36,8 +48,30 @@ class MyApp extends StatelessWidget {
                               Text(task.getName()),
                               Checkbox(value: task.getStatus(), onChanged: null)
                             ]),
-                          ))
+                          )))
                       .toList()),
-            )));
-  }
+            ));
+    }
+}
+
+
+class DetailView extends StatelessWidget{
+    const DetailView({super.key, required this.task});
+
+    final Task task;
+
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(title: Text(task.getName())),
+        body: Center(child: 
+          Column(children: [
+            Text(task.getName()),
+            Text(task.getInitialDate()),
+            Text(task.getEndDate()),
+            Text(task.getStatus().toString()),
+          ])
+        )
+      );
+    }
 }
